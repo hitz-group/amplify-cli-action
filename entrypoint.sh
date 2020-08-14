@@ -47,10 +47,12 @@ echo "amplify version $(amplify --version)"
 case $5 in
 
   push)
+    yarn --frozen-lockfile
     amplify push $9 --yes
     ;;
 
   publish)
+    yarn --frozen-lockfile
     amplify publish $9 --yes
     ;;
 
