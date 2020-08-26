@@ -48,11 +48,15 @@ case $5 in
 
   push)
     yarn --frozen-lockfile
+    # TODO Refactor this
+    yarn build:package @hitz-group/online-store
     amplify push $9 --yes
     ;;
 
   publish)
     yarn --frozen-lockfile
+    # TODO Refactor this
+    yarn build:package @hitz-group/online-store
     amplify publish $9 --yes
     ;;
 
