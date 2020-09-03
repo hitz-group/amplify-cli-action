@@ -22,12 +22,26 @@ if [ -z "$6" ] ; then
   exit 1
 fi
 
+
+# TODO Refactor this
+case $5 in
+  push)
+    yarn --frozen-lockfile
+    yarn build:package @hitz-group/online-store
+    ;;
+
+  publish)
+    yarn --frozen-lockfile
+    yarn build:package @hitz-group/online-store
+    ;;
+esac
+
 # cd to project_dir if custom subfolder is specified
 if [ -n "$1" ] ; then
   cd "$1"
 fi
 
-# if amplify if available at path and custom amplify version is unspecified, do nothing, 
+# if amplify if available at path and custom amplify version is unspecified, do nothing,
 # otherwise install globally latest npm version
 # FIXME: weird: using local dep amplify-cli bugs with awscloudformation provider: with using provider underfined
 if [ -z $(which amplify) ] || [ -n "$8" ] ; then
@@ -36,7 +50,7 @@ if [ -z $(which amplify) ] || [ -n "$8" ] ; then
 # elif [ ! -f ./node_modules/.bin/amplify ] ; then
 else
   echo "using amplify available at PATH"
-# else 
+# else
 #   echo "using local project dependency amplify"
 #   PATH="$PATH:$(pwd)/node_modules/.bin"
 fi
@@ -47,16 +61,10 @@ echo "amplify version $(amplify --version)"
 case $5 in
 
   push)
-    yarn --frozen-lockfile
-    # TODO Refactor this
-    yarn build:package @hitz-group/online-store
     amplify push $9 --yes
     ;;
 
   publish)
-    yarn --frozen-lockfile
-    # TODO Refactor this
-    yarn build:package @hitz-group/online-store
     amplify publish $9 --yes
     ;;
 
@@ -68,14 +76,14 @@ case $5 in
     echo '{"projectPath": "'"$(pwd)"'","defaultEditor":"code","envName":"'$6'"}' > ./amplify/.config/local-env-info.json
 
     # if environment doesn't exist fail explicitly
-    if [ -z "$(amplify env get --name $6 | grep 'No environment found')" ] ; then  
+    if [ -z "$(amplify env get --name $6 | grep 'No environment found')" ] ; then
       echo "found existing environment $6"
       amplify env pull --yes $9
     else
       echo "$6 environment does not exist, consider using add_env command instead";
       exit 1
     fi
-    
+
     amplify status
     ;;
 
@@ -114,7 +122,7 @@ case $5 in
     fi
 
     # fill in dummy env in local-env-info so we delete current environment
-    # without switch to another one (amplify restriction) 
+    # without switch to another one (amplify restriction)
     echo '{"projectPath": "'"$(pwd)"'","defaultEditor":"code","envName":"dummyenvfordeletecurrentowork"}' > ./amplify/.config/local-env-info.json
     echo "Y" | amplify env remove "$6" $9
     ;;
