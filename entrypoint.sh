@@ -22,19 +22,15 @@ if [ -z "$6" ] ; then
   exit 1
 fi
 
+# cd to repo_dir if specified
+if [ -n "${10}" ] ; then
+  cd "${10}"
+fi
 
-# TODO Refactor this
-case $5 in
-  push)
-    yarn --frozen-lockfile
-    yarn build:package @hitz-group/online-store
-    ;;
-
-  publish)
-    yarn --frozen-lockfile
-    yarn build:package @hitz-group/online-store
-    ;;
-esac
+# run repo scripts if specified
+if [ -n "${11}" ] ; then
+  eval ${11}
+fi
 
 # cd to project_dir if custom subfolder is specified
 if [ -n "$1" ] ; then
